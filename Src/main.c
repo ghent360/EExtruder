@@ -82,7 +82,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+static char SerialOK = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -132,6 +132,7 @@ int main(void)
   MX_IWDG_Init();
   MX_SPI1_Init();
   MX_USART1_UART_Init();
+  SerialOK = 1;
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -234,8 +235,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-
+  if (SerialOK) {
+    HAL_UART_Transmit(&huart1, (uint8_t*)"Error!!!\n\r", 10, 0xffff);
+  }
+  while(1) {
+    asm ("bkpt 255");
+  }
   /* USER CODE END Error_Handler_Debug */
 }
 
