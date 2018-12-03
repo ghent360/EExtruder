@@ -3,6 +3,7 @@
 #include "cmsis_os.h"
 #include "usart.h"
 #include "adc.h"
+#include "tim.h"
 #include "task_start.h"
 #include <string.h>
 
@@ -26,6 +27,7 @@ void taskStart() {
     adcTimerId = osTimerCreate(osTimer(adcTimer), osTimerPeriodic, NULL);
     osTimerStart(adcTimerId, 100);
     osDelay( 150 );
+    HAL_TIM_Base_Start_IT(&htim3);
     for(;;)
     {
         snprintf(buffer, sizeof(buffer), "Vref    %d.%03d\n\r", vref / 1000, vref % 1000);

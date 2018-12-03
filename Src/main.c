@@ -55,6 +55,7 @@
 #include "dma.h"
 #include "i2c.h"
 #include "spi.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -130,6 +131,7 @@ int main(void)
   MX_I2C2_Init();
   MX_SPI1_Init();
   MX_USART1_UART_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
   SerialOK = 1;
   if (HAL_ADCEx_Calibration_Start(&hadc) != HAL_OK)
