@@ -5,6 +5,7 @@
 #include "adc.h"
 #include "tim.h"
 #include "task_start.h"
+#include "pwm_ticker.h"
 #include <string.h>
 
 static char buffer[30];
@@ -28,6 +29,7 @@ void taskStart() {
     osTimerStart(adcTimerId, 100);
     osDelay( 150 );
     HAL_TIM_Base_Start_IT(&htim3);
+    setPwmHeater0(10);
     for(;;)
     {
         snprintf(buffer, sizeof(buffer), "Vref    %d.%03d\n\r", vref / 1000, vref % 1000);

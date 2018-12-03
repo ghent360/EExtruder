@@ -82,7 +82,8 @@ Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM0/port.c \
 Src/tim.c
 
 CXX_SOURCES = \
-Src/SigmaDeltaPwm.cpp
+Src/SigmaDeltaPwm.cpp \
+Src/pwm_ticker.cpp
 
 # ASM sources
 ASM_SOURCES =  \
