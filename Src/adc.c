@@ -51,7 +51,8 @@
 #include "adc.h"
 
 /* USER CODE BEGIN 0 */
-
+#include <string.h>
+#include "stm32f0xx_ll_adc.h"
 /* USER CODE END 0 */
 
 ADC_HandleTypeDef hadc;
@@ -82,11 +83,15 @@ void MX_ADC_Init(void)
   {
     Error_Handler();
   }
+  if (HAL_ADCEx_Calibration_Start(&hadc) != HAL_OK)
+  {
+    Error_Handler();
+  }  
   /**Configure for the selected ADC regular channel to be converted. 
   */
   sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;
-  sConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES_5;
   if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -154,7 +159,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
     hdma_adc.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
     hdma_adc.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
     hdma_adc.Init.Mode = DMA_NORMAL;
-    hdma_adc.Init.Priority = DMA_PRIORITY_LOW;
+    hdma_adc.Init.Priority = DMA_PRIORITY_HIGH;
     if (HAL_DMA_Init(&hdma_adc) != HAL_OK)
     {
       Error_Handler();
@@ -163,7 +168,8 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
     __HAL_LINKDMA(adcHandle,DMA_Handle,hdma_adc);
 
   /* USER CODE BEGIN ADC1_MspInit 1 */
-
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);   
+  HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
   /* USER CODE END ADC1_MspInit 1 */
   }
 }
@@ -195,7 +201,56 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
 } 
 
 /* USER CODE BEGIN 1 */
+#define TEMP1_CHANEL     0
+#define TEMP2_CHANEL     1
+#define TEMPEX_CHANEL    2
+#define TEMP_CHIP_CHANEL 3
+#define VREF_CHANEL      4
 
+#define ADC_ACTIVE_CHANNELS 5
+#define ADC_NUM_SAMPLES     4
+
+static uint16_t adcSampleBuffer[ADC_ACTIVE_CHANNELS * ADC_NUM_SAMPLES];
+uint16_t vref = 0;
+uint16_t vTemp1 = 0;
+uint16_t vTemp2 = 0;
+uint16_t vTempEx = 0;
+int16_t chipTemp = 0;
+uint8_t adcComplete = 0;
+
+#define ADC_DATA(idx) \
+    adcSampleBuffer[(idx)] + \
+    adcSampleBuffer[(idx) + ADC_ACTIVE_CHANNELS] + \
+    adcSampleBuffer[(idx) + ADC_ACTIVE_CHANNELS * 2] + \
+    adcSampleBuffer[(idx) + ADC_ACTIVE_CHANNELS * 3]
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle) {
+  if( __HAL_ADC_GET_FLAG(&hadc, ADC_FLAG_EOS)) {
+    uint16_t adcData = ADC_DATA(VREF_CHANEL);
+    vref = ((uint32_t)VREFINT_CAL_VREF * (*VREFINT_CAL_ADDR) * ADC_NUM_SAMPLES) / adcData;
+    adcData = ADC_DATA(TEMP_CHIP_CHANEL);
+    int32_t temperature = 
+      ((int32_t)adcData * vref) / (VREFINT_CAL_VREF * ADC_NUM_SAMPLES) - *TEMPSENSOR_CAL1_ADDR;
+    temperature = temperature * (TEMPSENSOR_CAL2_TEMP - TEMPSENSOR_CAL1_TEMP) * 100;
+    temperature = temperature / (*TEMPSENSOR_CAL2_ADDR - *TEMPSENSOR_CAL1_ADDR);
+    temperature = temperature + TEMPSENSOR_CAL1_TEMP * 100;
+    chipTemp = (int16_t)temperature;
+    adcData = ADC_DATA(TEMP1_CHANEL);
+    vTemp1 = ((uint32_t)vref * adcData) / (4095 * ADC_NUM_SAMPLES);
+    adcData = ADC_DATA(TEMP2_CHANEL);
+    vTemp2 = ((uint32_t)vref * adcData) / (4095 * ADC_NUM_SAMPLES);
+    adcComplete = 1;
+  }
+}
+
+void startAdcRead() {
+  adcComplete = 0;
+  HAL_ADC_Stop_DMA(&hadc);
+  HAL_ADC_Start_DMA(
+    &hadc,
+    (uint32_t*)adcSampleBuffer,
+    sizeof(adcSampleBuffer)/sizeof(adcSampleBuffer[0]));
+}
 /* USER CODE END 1 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

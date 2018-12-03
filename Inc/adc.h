@@ -63,13 +63,18 @@
 extern ADC_HandleTypeDef hadc;
 
 /* USER CODE BEGIN Private defines */
-
+extern uint16_t vref;
+extern uint16_t vTemp1;
+extern uint16_t vTemp2;
+extern uint16_t vTempEx;
+extern int16_t chipTemp;
+extern uint8_t adcComplete;
 /* USER CODE END Private defines */
 
 void MX_ADC_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+void startAdcRead();
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
