@@ -23,7 +23,7 @@ TARGET = EExtruder
 DEBUG = 1
 # optimization
 #OPT = -Os -flto -g
-OPT = -Os -g
+OPT = -O0 -g
 
 
 #######################################
