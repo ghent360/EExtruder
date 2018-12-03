@@ -29,7 +29,8 @@ void taskStart() {
     osTimerStart(adcTimerId, 50);
     osDelay( 250 );
     HAL_TIM_Base_Start_IT(&htim3);
-    setPwmHeater0(10);
+    HAL_TIM_Base_Start_IT(&htim14);
+    //setPwmHeater0(10);
     for(;;)
     {
         snprintf(buffer, sizeof(buffer), "Vref    %d.%03d\n\r", vref / 1000, vref % 1000);
