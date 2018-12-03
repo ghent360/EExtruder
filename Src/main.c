@@ -54,7 +54,6 @@
 #include "adc.h"
 #include "dma.h"
 #include "i2c.h"
-#include "iwdg.h"
 #include "spi.h"
 #include "usart.h"
 #include "gpio.h"
@@ -129,12 +128,10 @@ int main(void)
   MX_ADC_Init();
   MX_I2C1_Init();
   MX_I2C2_Init();
-  //MX_IWDG_Init();
   MX_SPI1_Init();
   MX_USART1_UART_Init();
-  SerialOK = 1;
   /* USER CODE BEGIN 2 */
-
+  SerialOK = 1;
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
@@ -168,12 +165,10 @@ void SystemClock_Config(void)
 
   /**Initializes the CPU, AHB and APB busses clocks 
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI14|RCC_OSCILLATORTYPE_LSI
-                              |RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI14|RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.HSI14State = RCC_HSI14_ON;
   RCC_OscInitStruct.HSI14CalibrationValue = 16;
-  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL3;
