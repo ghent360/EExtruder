@@ -216,7 +216,6 @@ uint16_t vTemp1 = 0;
 uint16_t vTemp2 = 0;
 uint16_t vTempEx = 0;
 int16_t chipTemp = 0;
-uint8_t adcComplete = 0;
 
 #define ADC_DATA(idx) \
     adcSampleBuffer[(idx)] + \
@@ -239,12 +238,12 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle) {
     vTemp1 = ((uint32_t)vref * adcData) / (4095 * ADC_NUM_SAMPLES);
     adcData = ADC_DATA(TEMP2_CHANEL);
     vTemp2 = ((uint32_t)vref * adcData) / (4095 * ADC_NUM_SAMPLES);
-    adcComplete = 1;
+    //HAL_ADC_Stop_DMA(&hadc);
+    adcConversionComplete();
   }
 }
 
 void startAdcRead() {
-  adcComplete = 0;
   HAL_ADC_Stop_DMA(&hadc);
   HAL_ADC_Start_DMA(
     &hadc,

@@ -75,6 +75,7 @@ void MX_ADC_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 void startAdcRead();
+void adcConversionComplete();
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

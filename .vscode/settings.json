@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "task_start.h": "c"
+        "task_start.h": "c",
+        "freertos.h": "c"
     }
 }
