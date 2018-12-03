@@ -89,7 +89,10 @@ void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, TC1_CS_Pin|TC2_CS_Pin|EXT1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, E1_FAN_Pin|E0_CTL_Pin|E1_CTL_Pin|EXT2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, E1_FAN_Pin|EXT2_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, E0_CTL_Pin|E1_CTL_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pins : PCPin PCPin PCPin */
   GPIO_InitStruct.Pin = TACH3_Pin|TACH4_Pin|TACH5_Pin;

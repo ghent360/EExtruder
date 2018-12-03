@@ -132,6 +132,10 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   SerialOK = 1;
+  if (HAL_ADCEx_Calibration_Start(&hadc) != HAL_OK)
+  {
+    Error_Handler();
+  }  
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

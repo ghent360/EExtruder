@@ -83,10 +83,6 @@ void MX_ADC_Init(void)
   {
     Error_Handler();
   }
-  if (HAL_ADCEx_Calibration_Start(&hadc) != HAL_OK)
-  {
-    Error_Handler();
-  }  
   /**Configure for the selected ADC regular channel to be converted. 
   */
   sConfig.Channel = ADC_CHANNEL_0;
