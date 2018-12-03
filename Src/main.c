@@ -132,6 +132,7 @@ int main(void)
   MX_SPI1_Init();
   MX_USART1_UART_Init();
   MX_TIM3_Init();
+  MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
   SerialOK = 1;
   if (HAL_ADCEx_Calibration_Start(&hadc) != HAL_OK)

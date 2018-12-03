@@ -26,7 +26,7 @@ void taskStart() {
     /* Infinite loop */
     osTimerDef(adcTimer, StartAdcMeasureTick);
     adcTimerId = osTimerCreate(osTimer(adcTimer), osTimerPeriodic, NULL);
-    osTimerStart(adcTimerId, 200);
+    osTimerStart(adcTimerId, 50);
     osDelay( 250 );
     HAL_TIM_Base_Start_IT(&htim3);
     setPwmHeater0(10);
