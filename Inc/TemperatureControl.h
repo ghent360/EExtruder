@@ -12,6 +12,7 @@ public:
 
     //static bool load_controls(ConfigReader& cr);
     void on_halt(bool flg);
+    bool is_halted();
 
     void set_desired_temperature(float desired_temperature);
     float get_temperature();

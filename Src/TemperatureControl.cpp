@@ -21,11 +21,6 @@ void broadcast_halt(bool halt) {
     // TODO: write this
 }
 
-bool is_halted() {
-    // TODO: write this
-    return false;
-}
-
 TemperatureControl::TemperatureControl() {
     temp_violated = false;
     //sensor = nullptr;

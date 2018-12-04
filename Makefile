@@ -84,7 +84,8 @@ Src/tim.c
 CXX_SOURCES = \
 Src/SigmaDeltaPwm.cpp \
 Src/pwm_ticker.cpp \
-Src/TemperatureControl.cpp
+Src/TemperatureControl.cpp \
+Src/PID_Autotuner.cpp
 
 # ASM sources
 ASM_SOURCES =  \
