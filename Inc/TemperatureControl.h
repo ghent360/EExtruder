@@ -12,10 +12,17 @@ public:
 
     //static bool load_controls(ConfigReader& cr);
     void on_halt(bool flg);
-    bool is_halted();
+    bool is_halted() const {
+        return halted;
+    }
 
     void set_desired_temperature(float desired_temperature);
     float get_temperature();
+    void broadcast_halt(bool halt) {
+        halted = halt;
+        on_halt(halt);
+    }
+
 
 private:
     friend class PID_Autotuner;
@@ -89,5 +96,6 @@ private:
     bool readonly;
     bool windup;
     bool sensor_settings;
+    bool halted;
 };
 
