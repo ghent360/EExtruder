@@ -42,7 +42,7 @@ void taskStart() {
     osDelay( 250 );
     HAL_TIM_Base_Start_IT(&htim3);
     HAL_TIM_Base_Start_IT(&htim14);
-    //setPwmHeater0(10);
+    setPwmHeater0(80);
     for(;;)
     {
         printf("Vref    %d.%03d\n\r", vref / 1000, vref % 1000);

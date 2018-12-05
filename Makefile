@@ -22,8 +22,8 @@ TARGET = EExtruder
 # debug build?
 DEBUG = 1
 # optimization
-OPT = -Os -flto -g
-#OPT = -Os -g
+#OPT = -Os -flto -g
+OPT = -Os -g
 
 
 #######################################

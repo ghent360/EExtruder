@@ -1,28 +1,24 @@
 #include "SigmaDeltaPwm.h"
 #include "main.h"
 
-#define confine(value, min, max) (((value) < (min))?(min):(((value) > (max))?(max):(value)))
-
-#define PID_PWM_MAX 256
-
-SigmaDeltaPwm::SigmaDeltaPwm(uint16_t pin_no) 
-  : _pin(pin_no),
-    _max(PID_PWM_MAX - 1),
-    _pwm(-1),
-    _sd_direction(false),
-    _sd_accumulator(0) {}
-
-void SigmaDeltaPwm::pwm(int new_pwm) {
-    _pwm = confine(new_pwm, 0, _max);
+template<class T>
+constexpr T confine(T value, T min, T max) {
+    if (value < min) {
+        return min;
+    }
+    if (value > max) {
+        return max;
+    }
+    return value;
 }
 
-void SigmaDeltaPwm::max_pwm(int new_max) {
-    _max = confine(new_max, 0, PID_PWM_MAX - 1);
-    _pwm = confine(   _pwm, 0, _max);
+void SigmaDeltaPwm::pwm(int16_t new_pwm) {
+    _pwm = confine(new_pwm, (int16_t)0, _max);
 }
 
-int SigmaDeltaPwm::max_pwm() {
-    return _max;
+void SigmaDeltaPwm::max_pwm(int16_t new_max) {
+    _max = confine(new_max, (int16_t)0, (int16_t)(PID_PWM_MAX - 1));
+    _pwm = confine(   _pwm, (int16_t)0, _max);
 }
 
 void SigmaDeltaPwm::set(bool value) {
@@ -99,7 +95,7 @@ void SigmaDeltaPwm::on_tick(void)
     // this line should never actually do anything, it's just a sanity check in case our accumulator gets corrupted somehow.
     // If we didn't check and the accumulator is corrupted, we could leave a heater on for quite a long time
     // the accumulator is kept within these limits by the normal operation of the Sigma-Delta algorithm
-    _sd_accumulator = confine(_sd_accumulator, -PID_PWM_MAX, PID_PWM_MAX << 1);
+    _sd_accumulator = confine(_sd_accumulator, (int32_t)-PID_PWM_MAX, (int32_t)(PID_PWM_MAX << 1));
 
     // when _sd_direction == false, our output is 0 and our accumulator is increasing by _pwm
     if (_sd_direction == false) {
