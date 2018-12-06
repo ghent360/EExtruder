@@ -37,7 +37,6 @@ BUILD_DIR = build
 ######################################
 # C sources
 C_SOURCES =  \
-Src/task_start.c \
 Src/main.c \
 Src/gpio.c \
 Src/adc.c \
@@ -86,7 +85,9 @@ CXX_SOURCES = \
 Src/SigmaDeltaPwm.cpp \
 Src/pwm_ticker.cpp \
 Src/TemperatureControl.cpp \
-Src/PID_Autotuner.cpp
+Src/PID_Autotuner.cpp \
+Src/task_start.cpp \
+Src/Thermistor.cpp
 
 # ASM sources
 ASM_SOURCES =  \
