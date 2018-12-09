@@ -18,10 +18,10 @@ Thermistor heater2thm(4267.0f, 25.0f, 100000.0f, vTemp2);
 TemperatureControl tcHeater1(heater1, heater1thm);
 
 extern "C" void adcConversionComplete() {
+    tcHeater1.thermistor_read_tick();
 }
 
 static void SlowTicker(void const * argument) {
-    tcHeater1.thermistor_read_tick();
     startAdcRead();
 }
 
@@ -49,7 +49,7 @@ static void TempReporter(void const * argument) {
 extern "C" void taskStart() {
     osTimerDef(adcTimer, SlowTicker);
     adcTimerId = osTimerCreate(osTimer(adcTimer), osTimerPeriodic, NULL);
-    osTimerStart(adcTimerId, 200);
+    osTimerStart(adcTimerId, 50);
     osDelay( 250 );
     HAL_TIM_Base_Start_IT(&htim3);
     HAL_TIM_Base_Start_IT(&htim14);

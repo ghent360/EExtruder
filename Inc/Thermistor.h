@@ -11,6 +11,8 @@ public:
       r0_(r0),
       j_(1.0f / beta),
       k_(1.0f / (t0 + 273.15f)),
+      vThermLast_(0),
+      lastResult_(0),
       vTherm_(vTherm) {}
 
   const float beta_;
@@ -19,8 +21,10 @@ public:
   const float j_;
   const float k_;
 
-  virtual int16_t getTemperature() const;
+  virtual int16_t getTemperature();
 private:
+  uint16_t  vThermLast_;
+  int16_t   lastResult_;
   uint16_t& vTherm_;
 
   float calcTemperature() const;

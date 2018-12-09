@@ -25,6 +25,10 @@ float Thermistor::calcTemperature() const {
     return (1.0F / (k_ + (j_ * logf(r / r0_)))) - 273.15f;
 }
 
-int16_t Thermistor::getTemperature() const {
-    return (int16_t)ceilf(calcTemperature() * 100.0);
+int16_t Thermistor::getTemperature() {
+    if (vThermLast_ != vTherm_) {
+        vThermLast_ = vTherm_;
+        lastResult_ = (int16_t)ceilf(calcTemperature() * 100.0);
+    }
+    return lastResult_;
 }

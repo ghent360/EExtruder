@@ -22,7 +22,7 @@ TemperatureControl::TemperatureControl(SigmaDeltaPwm& heaterPin, TemperatureSens
       i_max(heaterPin.max_pwm()),
       o(0),
       last_reading(0),
-      readings_per_second(5),
+      readings_per_second(20),
       heater(heaterPin),
       hysteresis(2),
       iTerm(0),
@@ -228,7 +228,7 @@ void TemperatureControl::set_desired_temperature(float desired_temperature)
 
 float TemperatureControl::get_temperature()
 {
-    return last_reading;
+    return (float)sensor.getTemperature() / 100.0f;
 }
 
 void TemperatureControl::thermistor_read_tick()
