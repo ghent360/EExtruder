@@ -29,3 +29,6 @@ private:
     bool     _sd_direction;
     int32_t  _sd_accumulator;
 };
+
+extern SigmaDeltaPwm heater1;
+extern SigmaDeltaPwm heater2;

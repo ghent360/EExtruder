@@ -2,15 +2,13 @@
 
 #include <stdint.h>
 
-class TempSensor;
+class TemperatureSensor;
 class SigmaDeltaPwm;
 
 class TemperatureControl {
 public:
-    TemperatureControl();
-    ~TemperatureControl();
+    TemperatureControl(SigmaDeltaPwm& heater, TemperatureSensor& tempSensor);
 
-    //static bool load_controls(ConfigReader& cr);
     void on_halt(bool flg);
     bool is_halted() const {
         return halted;
@@ -22,16 +20,11 @@ public:
         halted = halt;
         on_halt(halt);
     }
-
-
-private:
-    friend class PID_Autotuner;
-
-    //bool configure(ConfigReader& cr, ConfigReader::section_map_t& m);
-
+    void set_max_temp(float max_temp) {
+        this->max_temp = max_temp;
+    }
     void thermistor_read_tick(void);
-    void pid_process(float);
-
+    void check_runaway();
     void setPIDp(float p) {
         p_factor = p;
     }
@@ -44,24 +37,26 @@ private:
         d_factor = d / PIDdt;
     }
 
-    void check_runaway();
-    //bool handle_mcode(GCode& gcode, OutputStream& os);
-    //bool handle_M6(GCode& gcode, OutputStream& os);
-    //bool handle_autopid(GCode& gcode, OutputStream& os);
+    void handle_autopid(float target, int ncycles);
+private:
+    friend class PID_Autotuner;
+
+    //bool configure(ConfigReader& cr, ConfigReader::section_map_t& m);
+
+    void pid_process(float);
+
 
     float target_temperature;
-    float max_temp, min_temp;
+    float max_temp;
+    float min_temp;
 
-    float preset1;
-    float preset2;
-
-    //TempSensor *sensor{nullptr};
+    TemperatureSensor& sensor;
     float i_max;
     int o;
     float last_reading;
     float readings_per_second;
 
-    SigmaDeltaPwm *heater_pin{nullptr};
+    SigmaDeltaPwm& heater;
 
     float hysteresis;
     float iTerm;
@@ -81,8 +76,6 @@ private:
         TARGET_TEMPERATURE_REACHED
     };
 
-    uint8_t tool_id{0};
-
     RUNAWAY_TYPE runaway_state;
     // Temperature runaway config options
     uint8_t runaway_range; // max 63
@@ -92,10 +85,7 @@ private:
     uint8_t tick;
     bool use_bangbang;
     bool temp_violated;
-    bool active;
-    bool readonly;
     bool windup;
-    bool sensor_settings;
     bool halted;
 };
 

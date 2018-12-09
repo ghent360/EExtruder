@@ -15,18 +15,16 @@ static float toFp256(uint32_t v) {
     return y.fv;
 }
 
-float Thermistor::getTemperature(uint16_t vin) const {
+float Thermistor::calcTemperature() const {
     //float r = 4700.0f / ((float)vref/ vin - 1.0f);
-    if (vref < vin || (vref - vin) < 50) {
+    if (vref < vTherm_ || (vref - vTherm_) < 50) {
         return -1;
     }
-    uint32_t r_int = ((uint32_t)(4700 * 256) * vin) / (vref - vin);
+    uint32_t r_int = ((uint32_t)(4700 * 256) * vTherm_) / (vref - vTherm_);
     float r = toFp256(r_int);
-#if 0    
-    if (r > r0_) {
-        return (uint32_t)(t0_ * 100);
-    }
-#endif
-    float t = (1.0F / (k_ + (j_ * logf(r / r0_)))) - 273.15f;
-    return (uint32_t)(t * 100 + 50);
+    return (1.0F / (k_ + (j_ * logf(r / r0_)))) - 273.15f;
+}
+
+int16_t Thermistor::getTemperature() const {
+    return (int16_t)ceilf(calcTemperature() * 100.0);
 }
