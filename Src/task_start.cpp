@@ -58,11 +58,11 @@ extern "C" void taskStart() {
     tempTaskHandle = osThreadCreate(osThread(tempTask), NULL);
 
     //setPwmHeater0(140);
-    tcHeater1.setPIDp(88.9);
-    tcHeater1.setPIDi(2.223);
-    tcHeater1.setPIDd(889);
-    //tcHeater1.handle_autopid(55, 10);
-    tcHeater1.set_desired_temperature(45);
+    tcHeater1.setPIDp(78.8);
+    tcHeater1.setPIDi(2.476);
+    tcHeater1.setPIDd(627);
+    //tcHeater1.handle_autopid(65, 10);
+    //tcHeater1.set_desired_temperature(85);
     /* Infinite loop */
     for(;;)
     {

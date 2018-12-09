@@ -148,7 +148,11 @@ void PID_Autotuner::run_auto_pid(float target, int ncycles)
         if (justchanged && peakCount >= 4) {
             // we've transitioned. check if we can autotune based on the last peaks
             float avgSeparation = (fabsf(peaks[peakCount - 1] - peaks[peakCount - 2]) + fabsf(peaks[peakCount - 2] - peaks[peakCount - 3])) / 2;
-            printf("// Cycle %d: max: %g, min: %g, avg separation: %g\n", peakCount, absMax, absMin, avgSeparation);
+            printf("// Cycle %d: max: %d.%03d, min: %d.%03d, avg separation: %d.%03d\n", 
+                peakCount,
+                (int)absMax, (int)(absMax * 1000) % 1000,
+                (int)absMin, (int)(absMin * 1000) % 1000,
+                (int)avgSeparation, (int)(avgSeparation * 1000) % 1000);
             if (peakCount > 3 && avgSeparation < (0.05 * (absMax - absMin))) {
                 printf("Stabilized\n");
                 finishUp();
