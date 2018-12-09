@@ -22,7 +22,6 @@ void StartAdcMeasureTick(void const * argument) {
 Thermistor heater0thm(4267.0f, 25.0f, 100000.0f);
 
 extern "C" void taskStart() {
-    /* Infinite loop */
     osTimerDef(adcTimer, StartAdcMeasureTick);
     adcTimerId = osTimerCreate(osTimer(adcTimer), osTimerPeriodic, NULL);
     osTimerStart(adcTimerId, 50);
@@ -30,6 +29,7 @@ extern "C" void taskStart() {
     HAL_TIM_Base_Start_IT(&htim3);
     HAL_TIM_Base_Start_IT(&htim14);
     //setPwmHeater0(140);
+    /* Infinite loop */
     for(;;)
     {
         printf("Vref    %d.%03d\n\r", vref / 1000, vref % 1000);
